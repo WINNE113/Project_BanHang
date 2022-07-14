@@ -5,8 +5,11 @@
  */
 package Control_Servlet;
 
+import Entity.ProductCart;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,8 +21,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author ASUS-PRO
  */
-@WebServlet(name = "LogOut", urlPatterns = {"/logout"})
-public class LogOutServlet extends HttpServlet {
+@WebServlet(name = "CheckOut_Servlet", urlPatterns = {"/loadinftocheckout"})
+public class LoadInfToCheckOut_Servlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +41,10 @@ public class LogOutServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LogOut</title>");            
+            out.println("<title>Servlet CheckOut_Servlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LogOut at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CheckOut_Servlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,10 +62,17 @@ public class LogOutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       HttpSession session = request.getSession();
-       session.removeAttribute("account");
-       session.removeAttribute("cart");
-       response.sendRedirect("load");
+        
+        // lưu Attribute totalPrice tới trang checkout 
+        HttpSession session = request.getSession();
+        double totalDetail;
+        double totalPrice = 0;
+        HashMap<Integer, ProductCart> cart = (HashMap<Integer, ProductCart>) session.getAttribute("cart");
+        for (Map.Entry<Integer, ProductCart> en : cart.entrySet()) {
+            totalPrice += en.getValue().getQuantity() * en.getValue().getProduct().getPrice();
+        }
+        request.setAttribute("totalPrice", totalPrice);      
+        request.getRequestDispatcher("CheckOut.jsp").forward(request, response);
     }
 
     /**

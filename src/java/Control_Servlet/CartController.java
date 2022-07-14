@@ -5,8 +5,14 @@
  */
 package Control_Servlet;
 
+import Dao.Dao;
+import Entity.Product;
+import Entity.ProductCart;
+import Entity.UserAccount;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,8 +24,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author ASUS-PRO
  */
-@WebServlet(name = "LogOut", urlPatterns = {"/logout"})
-public class LogOutServlet extends HttpServlet {
+@WebServlet(name = "CartController", urlPatterns = {"/cartcontroller"})
+public class CartController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +44,10 @@ public class LogOutServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LogOut</title>");            
+            out.println("<title>Servlet CartController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LogOut at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CartController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,10 +65,7 @@ public class LogOutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       HttpSession session = request.getSession();
-       session.removeAttribute("account");
-       session.removeAttribute("cart");
-       response.sendRedirect("load");
+        processRequest(request, response);
     }
 
     /**
@@ -76,7 +79,45 @@ public class LogOutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int id = Integer.parseInt(request.getParameter("id"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        System.out.println("Run add to cart");
+        System.out.println(" id của sản phẩm là:  " + id);
+        Dao dao = new Dao();
+        Product product = dao.getProductByIdisInt(id);
+        System.out.println("" + product);
+        HttpSession session = request.getSession();
+        ProductCart productCart;
+        // xét account có khác null hay khong
+        UserAccount account = (UserAccount) session.getAttribute("account");
+        // nếu khac null thì them sp vào cart
+        if (account != null) {
+            HashMap<Integer, ProductCart> cart = (HashMap<Integer, ProductCart>) session.getAttribute("cart");
+            if (cart == null) {
+                // nếu cart trống thì tạo ra một đối tượng HashMap mới 
+                cart = new HashMap<Integer, ProductCart>();
+                productCart = new ProductCart(quantity, product);
+                cart.put(id, productCart);
+            } else {
+                // nếu trong cart đã có thì tăng cái quanlity lên
+                if (cart.containsKey(id)) {
+                    productCart = cart.get(id);
+
+                    productCart.incrementQuantity(quantity);
+                } else {
+                    productCart = new ProductCart(quantity, product);
+                    cart.put(id, productCart);
+                }
+            }
+            // lưu cart vào session
+            session.setAttribute("cart", cart);
+
+            response.sendRedirect("cart");
+            
+        }else {
+            response.sendRedirect("Login.jsp"); //nếu bằng null thì chuyển tới trong Login để login vào
+        }
+
     }
 
     /**

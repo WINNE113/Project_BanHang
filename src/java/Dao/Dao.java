@@ -8,16 +8,20 @@ package Dao;
 import Entity.Product;
 import Context.DBContext;
 import Entity.Brand;
+import Entity.OrderDetail;
 import Entity.Categorie;
 import Entity.Galery;
 import Entity.UserAccount;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
-/**
+/*
  *
  * @author ASUS-PRO
  */
@@ -201,6 +205,34 @@ public class Dao {
             con = new DBContext().getConnection();
             ps = con.prepareStatement(query);
             ps.setString(1, pid);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return new Product(rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getInt(3),
+                        rs.getString(4),
+                        rs.getDouble(5),
+                        rs.getInt(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getDate(9),
+                        rs.getDate(10),
+                        rs.getInt(11),
+                        rs.getString(12),
+                        rs.getInt(13));
+            }
+
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public Product getProductByIdisInt(int pid) {
+        String query = "select * from Product where id = ?";
+        try {
+            con = new DBContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, pid);
             rs = ps.executeQuery();
             while (rs.next()) {
                 return new Product(rs.getInt(1),
@@ -579,6 +611,60 @@ public class Dao {
 
     }
 
+    // return lai id 
+    public int addOrder(int userId, String fullName, String email, String phone, String address, String note, Date orderDate, Double totalMoney) {
+
+        String query = "insert into Orders([user_id],fullName,email,phone_number,[address],note,order_date,total_money) \n"
+                + "values (? , ?, ?, ? , ?, ? , ? ,?)";
+
+        try {
+            con = new DBContext().getConnection();
+            // add Statement.RETURN_GENERATED_KEYS to return int id
+            ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, userId);
+            ps.setString(2, fullName);
+            ps.setString(3, email);
+            ps.setString(4, phone);
+            ps.setString(5, address);
+            ps.setString(6, note);
+            ps.setDate(7, orderDate);
+            ps.setDouble(8, totalMoney);
+
+            ps.executeUpdate();
+
+            // return 
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            rs.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return 0;
+    }
+
+    public void addOrderDetail(OrderDetail oderDetail) {
+
+        String query = "insert into Order_Details(order_id,product_id,price,num,total_money) values (? , ?, ?,?,?)";
+
+        try {
+            con = new DBContext().getConnection(); 
+            ps = con.prepareStatement(query);
+            ps.setInt(1, oderDetail.getOrderId());
+            ps.setInt(2, oderDetail.getProductId());
+            ps.setDouble(3, oderDetail.getPrice());
+            ps.setInt(4, oderDetail.getQuantity());
+            ps.setDouble(5, oderDetail.getTotal());
+            ps.executeUpdate();
+        } catch (Exception e) {
+
+        }
+
+    }
+
     public int totalAccount() {
         String query = "select id from [User] order by id ";
         try {
@@ -595,7 +681,8 @@ public class Dao {
         }
         return 0;
     }
-     public int totalProduct() {
+
+    public int totalProduct() {
         String query = "select id from [Product] order by id";
         try {
             int i = 0;
@@ -611,7 +698,8 @@ public class Dao {
         }
         return 0;
     }
-      public int totalSeller() {
+
+    public int totalSeller() {
         String query = "select id from [User] where role_id = 2";
         try {
             int i = 0;
@@ -628,9 +716,15 @@ public class Dao {
         return 0;
     }
 
+    public java.sql.Date convertDate(java.util.Date date) {
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+        return sqlDate;
+    }
+
     public static void main(String[] args) {
         Dao dao = new Dao();
-        System.out.println("total account is:" + dao.totalAccount());
+        System.out.println("total account is:"
+                + dao.totalAccount());
 //        List<Product> list = new ArrayList();
 //        list = dao.searchProduct("oppo");
 //        for (Product p : list) {
@@ -643,8 +737,8 @@ public class Dao {
 //        }
 //        Product p = dao.getProductById("4");
 //        System.out.println("Product" + p);
-       Product pid_13 = dao.getProductById("13");
-        System.out.println("p_id13:"+pid_13);
+        Product pid_13 = dao.getProductById("13");
+        System.out.println("p_id13:" + pid_13);
 //        List<Product> listP = dao.getProductBySellId(6);
 //        for (Product product : listP) {
 //            System.out.println("List product: " + product);

@@ -196,9 +196,15 @@
                                                         <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                                                     </div>
                                                 </div>
+                                                    <form action="cartcontroller" method="POST">
                                                 <div class="add-to-cart">
-                                                    <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                                                    <input type="hidden" value="${x.id}" name="id">
+                                                     <input type="hidden" value="1" name="quantity">
+                                                    <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>ADD TO CART</button>
                                                 </div>
+<!--                                                <a href="cartcontroller?id=">ADD TO CART</a>-->
+                                                    </form>
+                                                    
                                             </div>
                                         </c:forEach>
 
@@ -377,9 +383,11 @@
                                                     <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                                                 </div>
                                             </div>
+
                                             <div class="add-to-cart">
                                                 <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
                                             </div>
+
                                         </div>
                                         <!-- /product -->
 

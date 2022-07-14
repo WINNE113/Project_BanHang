@@ -147,18 +147,27 @@
                                     </select>-->
                                 </label>
                             </div>
-
+                            <form action="cartcontroller" method="POST">
                             <div class="add-to-cart">
-                                <div class="qty-label">
+<!--                                <div class="qty-label">
                                     Qty
                                     <div class="input-number">
-                                        <input type="number">
+                                        <input type="number" value = "1">
                                         <span class="qty-up">+</span>
                                         <span class="qty-down">-</span>
                                     </div>
+                                </div>-->
+                                
+                                 <div class="qty-label">
+                                    <div data-th="Quantity">
+                                        <input name="quantity" type="number" class="form-control form-control-lg text-center" value="1"> 
+                                    </div>
                                 </div>
+
+                                <input name = "id" type = "hidden" value="${detailP.id}">
                                 <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
                             </div>
+                             </form>
 
                             <ul class="product-btns">
                                 <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>

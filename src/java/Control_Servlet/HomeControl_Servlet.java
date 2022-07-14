@@ -8,14 +8,18 @@ package Control_Servlet;
 import Dao.Dao;
 import Entity.Categorie;
 import Entity.Product;
+import Entity.ProductCart;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -54,6 +58,25 @@ public class HomeControl_Servlet extends HttpServlet {
         //get product by pid
         Product pid_13 = dao.getProductById("13");
         request.setAttribute("pid_13", pid_13);
+
+        HttpSession session = request.getSession();
+        // tính tổng số tiền của sp có trong cart
+        double totalPrice = 0;
+        // Số lượng sản phẩm trong cart
+        int numOfProduct = 0;
+        // lấy ra session 
+        HashMap<Integer, ProductCart> cart = (HashMap<Integer, ProductCart>) session.getAttribute("cart");
+        // Nếu sesstion khac null
+        if (cart != null) {
+            for (Map.Entry<Integer, ProductCart> en : cart.entrySet()) {
+                totalPrice += en.getValue().getQuantity() * en.getValue().getProduct().getPrice();
+                numOfProduct += 1;
+            }
+        }
+        
+        request.setAttribute("totalPrice", totalPrice);
+        
+        request.setAttribute("numOfProduct", numOfProduct);
 
         request.getRequestDispatcher("Index_Home.jsp").forward(request, response);
     }

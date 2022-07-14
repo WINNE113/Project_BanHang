@@ -6,6 +6,7 @@
 package Control_Servlet;
 
 import Dao.Dao;
+import Dao.SendEmail;
 import Entity.Order;
 import Entity.OrderDetail;
 import Entity.ProductCart;
@@ -107,17 +108,35 @@ public class CheckOutOrder_Servlet extends HttpServlet {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Dao dao = new Dao();
             // add info order -> SQL 
-             int orderId =  dao.addOrder(userId, fullName, email, tell, address, note, dao.convertDate(date), totalPrice); //new java.sql.Date(order.getOrderDate().getTime())
+            int orderId = dao.addOrder(userId, fullName, email, tell, address, note, dao.convertDate(date), totalPrice); //new java.sql.Date(order.getOrderDate().getTime())
 
             // add order vao trong orderdetail
             for (Map.Entry<Integer, ProductCart> productCar : cart.entrySet()) {
-               OrderDetail orderDetail = new OrderDetail(orderId,productCar.getValue().getProduct().getId(),productCar.getValue().getProduct().getPrice(),productCar.getValue().getQuantity() , productCar.getValue().getProduct().getPrice() * productCar.getValue().getQuantity() );
-               dao.addOrderDetail(orderDetail);
+                OrderDetail orderDetail = new OrderDetail(orderId, productCar.getValue().getProduct().getId(), productCar.getValue().getProduct().getPrice(), productCar.getValue().getQuantity(), productCar.getValue().getProduct().getPrice() * productCar.getValue().getQuantity());
+                dao.addOrderDetail(orderDetail);
             }
-            
+
+            // Send Email order Success to user
+            String subject = "Your order has been processing.";
+            String message = "<!DOCTYPE html>\n"
+                    + "<html lang=\"en\">\n"
+                    + "\n"
+                    + "<head>\n"
+                    + "</head>\n"
+                    + "\n"
+                    + "<body>\n"
+                    + "    <h3 style=\"color: blue;\">Your order has been processing.</h3>\n"
+                 
+                    + "    <h3>Thank you very much!</h3>\n"
+                    + "\n"
+                    + "</body>\n"
+                    + "\n"
+                    + "</html>";
+
+            SendEmail.send(email, subject, message, "thanglhde150360@fpt.edu.vn", "18093101@");
             // Nếu checkout thành công thì gán giá trị null cho sesstion car
             session.setAttribute("cart", null);
-            
+
             response.sendRedirect("load");
             ArrayList list = new ArrayList();
 
@@ -131,7 +150,7 @@ public class CheckOutOrder_Servlet extends HttpServlet {
             System.out.println(" java.util.Date:" + note);
 
             System.out.println(" list oder detail: " + list.toString());
-            
+
             System.out.println("ID of Order: " + orderId);
 
         } else {

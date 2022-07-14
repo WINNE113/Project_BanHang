@@ -651,7 +651,7 @@ public class Dao {
         String query = "insert into Order_Details(order_id,product_id,price,num,total_money) values (? , ?, ?,?,?)";
 
         try {
-            con = new DBContext().getConnection(); 
+            con = new DBContext().getConnection();
             ps = con.prepareStatement(query);
             ps.setInt(1, oderDetail.getOrderId());
             ps.setInt(2, oderDetail.getProductId());
@@ -663,6 +663,25 @@ public class Dao {
 
         }
 
+    }
+
+    public String getPassWordByEmail(String email) {
+        String query = "Select [password] from [User] where email = ? ";
+        try {
+            con = new DBContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            String passWord = null;
+            while (rs.next()) {
+                passWord = rs.getString(1);
+            }
+            return passWord;
+        } catch (Exception e) {
+
+        }
+
+        return null;
     }
 
     public int totalAccount() {

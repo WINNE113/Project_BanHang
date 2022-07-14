@@ -91,19 +91,19 @@
                                                                     <input class="input" type="text" name="first-name" placeholder="First Name">
                                                                 </div>-->
                                     <div class="form-group">
-                                        <input class="input" type="text" name="fullName" placeholder="Full Name">
+                                        <input class="input" type="text" name="fullName" required="" placeholder="Full Name">
                                     </div>
                                     <div class="form-group">
-                                        <input class="input" type="email" name="email" placeholder="Email">
+                                        <input class="input" type="email" name="email" required="" placeholder="Email">
                                     </div>
                                     <div class="form-group">
-                                        <input class="input" type="text" name="address" placeholder="Address">
+                                        <input class="input" type="text" name="address" required="" placeholder="Address">
                                     </div>
                                     <!--                            <div class="form-group">
                                                                     <input class="input" type="text" name="city" placeholder="City">
                                                                 </div>-->
                                     <div class="form-group">
-                                        <input class="input" type="tel" name="tel" placeholder="Telephone">
+                                        <input class="input" type="tel" name="tel" required="" placeholder="Telephone">
                                     </div>
                                     <!--                            <div class="form-group">
                                                                     <input class="input" type="text" name="country" placeholder="Country">

@@ -24,8 +24,7 @@
                 <input name="pass"  type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
 
                 <div class="form-group form-check">
-                    <input name="remember" value="1" type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                    <a href="ForgotPassWord.jsp">Forgot PassWord</a>
                 </div>
 
                 <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> Sign in</button>

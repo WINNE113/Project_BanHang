@@ -126,13 +126,15 @@ public class CheckOutOrder_Servlet extends HttpServlet {
                     + "\n"
                     + "<body>\n"
                     + "    <h3 style=\"color: blue;\">Your order has been processing.</h3>\n"
-                 
                     + "    <h3>Thank you very much!</h3>\n"
                     + "\n"
                     + "</body>\n"
                     + "\n"
                     + "</html>";
 
+            // Test case
+//            String m = "Your Order has bean processing \n" + "Full Name: " + fullName + "\n" + "Email: " + email
+//                            + "\n" + "Product: \n" + "Total: " + totalPrice ;
             SendEmail.send(email, subject, message, "thanglhde150360@fpt.edu.vn", "18093101@");
             // Nếu checkout thành công thì gán giá trị null cho sesstion car
             session.setAttribute("cart", null);

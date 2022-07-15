@@ -41,8 +41,9 @@
                                         <label for="exampleInputEmail1">Email address:</label>
                                         <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                                         <small id="emailHelp" class="form-text text-muted">we'll send forget password link on your email.</small>
+                                        <p class="text-danger">${message}</p>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Forget password</button>
+                                    <button type="submit" class="btn btn-primary">Send</button>
                                 </form>
                             </div>
                         </div>

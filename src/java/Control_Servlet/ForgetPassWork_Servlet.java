@@ -7,6 +7,7 @@ package Control_Servlet;
 
 import Dao.Dao;
 import Dao.SendEmail;
+import Entity.UserAccount;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -79,26 +80,33 @@ public class ForgetPassWork_Servlet extends HttpServlet {
         // Send Email order Success to user
         String subject = "Your order has been processing.";
         Dao dao = new Dao();
-        String passWord = dao.getPassWordByEmail(email);
-        String m = "You PassWork is:" + passWord;
-        String message = "<!DOCTYPE html>\n"
-                + "<html lang=\"en\">\n"
-                + "\n"
-                + "<head>\n"
-                + "</head>\n"
-                + "\n"
-                + "<body>\n"
-                + "    <h3 style=\"color: blue;\">PassWord is: 111</h3>\n"
-                + "    <h3>Thank you very much!</h3>\n"
-                + "\n"
-                + "</body>\n"
-                + "\n"
-                + "</html>";
+        // return lai một account nếu email tồn tại
+        UserAccount account = dao.CheckEmailExit(email);
+        if (account != null) {
+            String passWord = dao.getPassWordByEmail(email);
+            String m = "You PassWork is:" + passWord;
+            String message = "<!DOCTYPE html>\n"
+                    + "<html lang=\"en\">\n"
+                    + "\n"
+                    + "<head>\n"
+                    + "</head>\n"
+                    + "\n"
+                    + "<body>\n"
+                    + "    <h3 style=\"color: blue;\">PassWord is: 111</h3>\n"
+                    + "    <h3>Thank you very much!</h3>\n"
+                    + "\n"
+                    + "</body>\n"
+                    + "\n"
+                    + "</html>";
+
+            SendEmail.send(email, subject, m, "thanglhde150360@fpt.edu.vn", "18093101@");
+            response.sendRedirect("Login.jsp");
+        }else{
+            request.setAttribute("message","Email Not Exit!");
+            request.getRequestDispatcher("ForgotPassWord.jsp").forward(request, response);
+        }
         
-        SendEmail.send(email, subject, m, "thanglhde150360@fpt.edu.vn", "18093101@");
-        response.sendRedirect("Login.jsp");
-        
-        System.out.println("PassWord: "+ passWord);
+       
     }
 
     /**

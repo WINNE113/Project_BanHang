@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Dao;
 
 import Entity.Product;
@@ -25,6 +21,8 @@ import java.util.*;
  *
  * @author ASUS-PRO
  */
+
+
 public class Dao {
 
     Connection con = null;
@@ -679,6 +677,33 @@ public class Dao {
             return passWord;
         } catch (Exception e) {
 
+        }
+
+        return null;
+    }
+
+    public UserAccount CheckEmailExit(String email) {
+        String query = "select * From [User] where email = ?";
+        try {
+            con = new DBContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return new UserAccount(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(11),
+                        rs.getString(6),
+                        rs.getDate(8),
+                        rs.getDate(9),
+                        rs.getInt(10),
+                        rs.getInt(7));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return null;
